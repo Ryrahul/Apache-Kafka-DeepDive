@@ -1,6 +1,6 @@
 import { Admin } from "kafkajs";
 import { kafka } from ".";
-interface TopicConfig {
+export interface TopicConfig {
   name: string;
   partitions?: number;
 }

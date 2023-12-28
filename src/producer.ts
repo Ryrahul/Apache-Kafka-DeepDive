@@ -1,20 +1,49 @@
 import { kafka } from ".";
-import { Partitioners } from "kafkajs";
-
-const producer = kafka.producer({
-  allowAutoTopicCreation: false,
-  createPartitioner: Partitioners.LegacyPartitioner,
-});
-async function producerOperations() {
-  await producer.connect();
-  console.log("producer Connected");
-  await producer.send({
-    topic: "Order_Food",
-    messages: [
-      { key: "key1", value: "hi there", partition: 0 },
-    ],
-  });
-  await producer.disconnect();
-  console.log("message sent");
+import { Partitioners, Producer } from "kafkajs";
+interface Message {
+  key: string;
+  value: string;
+  partition: number;
 }
-producerOperations();
+class KafkaProducer {
+  private producer: Producer;
+  constructor() {
+    this.producer = kafka.producer({
+      allowAutoTopicCreation: false,
+      createPartitioner: Partitioners.LegacyPartitioner,
+    });
+  }
+  async ProducerConnect() {
+    try {
+      await this.producer.connect();
+    } catch (e) {
+      throw e;
+    }
+  }
+  async SendMessage(topic: string, message: Message) {
+    try {
+      await this.producer.send({
+        topic: topic,
+        messages: [
+          {
+            key: message.key,
+            value: message.value,
+            partition: message.partition,
+          },
+        ],
+      });
+      console.log("message Sent");
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  async Disconnect() {
+    try {
+      await this.producer.disconnect();
+    } catch (e) {
+      throw e;
+    }
+  }
+}
+export default KafkaProducer

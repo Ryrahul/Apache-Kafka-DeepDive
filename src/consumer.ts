@@ -44,3 +44,5 @@ class KafkaConsumer {
     }
   }
 }
+
+export default KafkaConsumer;
