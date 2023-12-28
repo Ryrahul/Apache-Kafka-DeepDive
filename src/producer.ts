@@ -46,4 +46,4 @@ class KafkaProducer {
     }
   }
 }
-export default KafkaProducer
+export default KafkaProducer;

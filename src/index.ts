@@ -13,7 +13,7 @@ async function runAdmin() {
   try {
     await admin.connectAdmin();
 
-    const topicConfig: TopicConfig= {
+    const topicConfig: TopicConfig = {
       name: "Your_Topic_Name",
       partitions: 3,
     };
@@ -28,7 +28,6 @@ async function runAdmin() {
   }
 }
 
-
 async function runProducer() {
   const producer = new KafkaProducer();
 
@@ -40,7 +39,7 @@ async function runProducer() {
     const message = {
       key: "1",
       value: "Hello Kafka!",
-      partition: 0, 
+      partition: 0,
     };
 
     await producer.SendMessage(topic, message);
@@ -51,17 +50,18 @@ async function runProducer() {
   }
 }
 
-
 async function runConsumer() {
   const consumer = new KafkaConsumer("my-group");
 
   try {
     await consumer.connectConsumer();
-    
+
     const topic = "Your_Topic_Name";
 
     await consumer.ConsumeMessage(topic, ({ topic, partition, message }) => {
-      console.log(`Received message from topic '${topic}', partition ${partition}: ${message.value}`);
+      console.log(
+        `Received message from topic '${topic}', partition ${partition}: ${message.value}`,
+      );
     });
   } catch (error) {
     console.error("Consumer error:", error);
@@ -70,14 +70,6 @@ async function runConsumer() {
   }
 }
 
-
-
-
-
-
-
 runAdmin();
 runProducer();
 runConsumer();
-
-
