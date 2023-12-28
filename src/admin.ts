@@ -12,6 +12,7 @@ class KafkaAdmin {
   async connectAdmin(): Promise<void> {
     try {
       await this.admin.connect();
+      console.log("Admin Connected");
     } catch (e) {
       throw e;
     }
@@ -41,10 +42,15 @@ class KafkaAdmin {
   async DisconnectAdmin() {
     try {
       await this.admin.disconnect();
-      console.log("Disconnected");
+      console.log(" Admin Disconnected");
     } catch (e) {
       throw e;
     }
+  }
+  async DeleteTopic(){
+    await this.admin.deleteTopics({
+      topics:[]
+    })
   }
 }
 export default KafkaAdmin;

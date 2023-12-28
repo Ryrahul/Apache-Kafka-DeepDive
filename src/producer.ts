@@ -16,6 +16,7 @@ class KafkaProducer {
   async ProducerConnect() {
     try {
       await this.producer.connect();
+      console.log("Producer Connected");
     } catch (e) {
       throw e;
     }
@@ -41,6 +42,7 @@ class KafkaProducer {
   async Disconnect() {
     try {
       await this.producer.disconnect();
+      console.log("Producer Disconnected");
     } catch (e) {
       throw e;
     }

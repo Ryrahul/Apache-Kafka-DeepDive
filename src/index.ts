@@ -14,7 +14,7 @@ async function runAdmin() {
     await admin.connectAdmin();
 
     const topicConfig: TopicConfig = {
-      name: "Your_Topic_Name",
+      name: "YOUR_CHOICE",
       partitions: 3,
     };
 
@@ -24,6 +24,7 @@ async function runAdmin() {
   } catch (error) {
     console.error("Admin error:", error);
   } finally {
+    await admin.DeleteTopic()
     await admin.DisconnectAdmin();
   }
 }
@@ -34,7 +35,7 @@ async function runProducer() {
   try {
     await producer.ProducerConnect();
 
-    const topic = "Your_Topic_Name";
+    const topic = "YOUR_CHOICE";
 
     const message = {
       key: "1",
@@ -56,20 +57,27 @@ async function runConsumer() {
   try {
     await consumer.connectConsumer();
 
-    const topic = "Your_Topic_Name";
+    const topic = "YOUR_CHOICE";
 
-    await consumer.ConsumeMessage(topic, ({ topic, partition, message }) => {
-      console.log(
-        `Received message from topic '${topic}', partition ${partition}: ${message.value}`,
-      );
-    });
+    await consumer.consumeMessages(topic)
   } catch (error) {
     console.error("Consumer error:", error);
   } finally {
-    await consumer.DisconnectConsumer();
+    // await consumer.DisconnectConsumer();
   }
 }
+async function runSequentiallyWithDelay() {
+  await runAdmin();
+  await runWithTimeout(3000, runProducer); 
+  await runWithTimeout(5000, runConsumer);
+}
 
-runAdmin();
-runProducer();
-runConsumer();
+function runWithTimeout(timeout: number, func: () => Promise<void>): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(async () => {
+      await func();
+      resolve();
+    }, timeout);
+  });
+}
+runSequentiallyWithDelay()
